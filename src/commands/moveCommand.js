@@ -1,16 +1,25 @@
-module.exports = () => ((robot, table) => {
+module.exports = () => ((robot, table, otherRobot) => {
   
     if(!robot) {
       console.log('Robot not placed')
       return null
     }
-  
+
     const updateRobot = (invalidMove = true, state, robotAxis) => {
+      const robotClone = Object.assign( Object.create( Object.getPrototypeOf(robot)), robot)
+      
       if(invalidMove) {
         console.log('Can\'t move robot off of the table')
         return robot
       }
-      robot[robotAxis] = state
+
+      robotClone[robotAxis] = state    
+      if(otherRobot && robotClone.xPos == otherRobot.xPos && robotClone.yPos == otherRobot.yPos) {
+        console.log('Can\'t move robot, other robot already in this spot')
+      } else {
+        robot[robotAxis] = state
+      }
+      
       return robot
     }
   
@@ -22,7 +31,7 @@ module.exports = () => ((robot, table) => {
       }
       else if(robot.direction === 'WEST' || robot.direction === 'SOUTH') {
         state = robot[robotAxis] - 1
-        invalidMove = robot[robotAxis] - 1 <= tableAxisLength
+        invalidMove = robot[robotAxis] - 1 < tableAxisLength
       }
       return updateRobot(invalidMove, state, robotAxis)  
     }

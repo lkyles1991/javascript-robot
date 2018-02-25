@@ -6,7 +6,8 @@ const reportCommand = require('./commands/reportCommand')
 const defaultCommand = require('./commands/defaultCommand')
 
 module.exports = (input) => {
-  const placePattern = RegExp('PLACE [0-4]+,[0-4]+,(NORTH|SOUTH|EAST|WEST)')
+  const placePattern = RegExp('PLACE (R1|R2)+,[0-4]+,[0-4]+,(NORTH|SOUTH|EAST|WEST)')
+  const robotInstPattern = RegExp('[^\s]+ (R1|R2)')
 
   const commands = {
     'LEFT':     turnCommand,
@@ -16,11 +17,25 @@ module.exports = (input) => {
     'REPORT':   reportCommand,
     'default':  defaultCommand,
   }
-
-   if(input.match(placePattern)) {
-     const inputSplit = input.replace(/\s/g, ',').split(',')
-     return commands['PLACE'](inputSplit[1], inputSplit[2], inputSplit[3])
-   }
-
-   return (commands[`${input}`] || commands['default'])(input)
+  const inputSplit = input.replace(/\s/g, ',').split(',')
+  
+  if(input.match(placePattern)) {
+    return {
+      theRobot: inputSplit[1],
+      command: commands['PLACE'](inputSplit[2], inputSplit[3], inputSplit[4])
+    }
+  }
+   
+  if(input.match(robotInstPattern)) {
+    return {
+      theRobot: inputSplit[1],
+      command: (commands[`${inputSplit[0]}`] || commands['default'])(inputSplit[0])
+    }
+  }
+  else {
+    return {
+      theRobot: 'R1',
+      command: commands['default']()}
+  }
+   
 }
