@@ -4,11 +4,10 @@ const Table = require('./Table')
 module.exports = class Mover {
   constructor() {
     this.table = new Table()
-    this.robot = null;
+    this.robot = null
   }
 
-  move(command){
+  execute(command){
     this.robot = command(this.robot, this.table)
   }
-  
 }

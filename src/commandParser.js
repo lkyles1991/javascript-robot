@@ -6,7 +6,7 @@ const reportCommand = require('./commands/reportCommand')
 const defaultCommand = require('./commands/defaultCommand')
 
 module.exports = (input) => {
-  const placePattern = RegExp('PLACE [0-9]+,[0-9]+,(NORTH|SOUTH|EAST|WEST)')
+  const placePattern = RegExp('PLACE [0-4]+,[0-4]+,(NORTH|SOUTH|EAST|WEST)')
 
   const commands = {
     'LEFT':     turnCommand,
